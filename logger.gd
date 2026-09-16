@@ -37,7 +37,7 @@ class ExternalSink:
 
 	## Write the string at the end of the sink (append mode), following
 	## the queue mode.
-	func write(output: String, level: int) -> void:
+	func write(_output: String, _level: int) -> void:
 		print("[ERROR] [logger] Using method which has to be overriden in your custom sink")
 
 
@@ -85,11 +85,11 @@ class Logfile extends ExternalSink:
 
 	## Validate the path given as argument, making it possible to write to
 	## the designated file or folder. Returns whether the path is valid.
-	func validate_path(path: String) -> bool:
-		if not (path.is_absolute_path() or path.is_relative_path()):
-			print("[ERROR] [logger] The given path '%s' is not valid." % path)
+	func validate_path(_path: String) -> bool:
+		if not (_path.is_absolute_path() or _path.is_relative_path()):
+			print("[ERROR] [logger] The given path '%s' is not valid." % _path)
 			return false
-		var base_dir: String = path.get_base_dir()
+		var base_dir: String = _path.get_base_dir()
 		var dir: DirAccess = DirAccess.open(base_dir)
 		if not dir:
 			var err: int = DirAccess.get_open_error()
@@ -155,12 +155,12 @@ class Logfile extends ExternalSink:
 		}
 
 
-	func _open_file(path: String) -> FileAccess:
-		var result: FileAccess = FileAccess.open(path, get_write_mode())
+	func _open_file(_path: String) -> FileAccess:
+		var result: FileAccess = FileAccess.open(_path, get_write_mode())
 
 		if result == null:
 			var err: int = FileAccess.get_open_error()
-			print("[ERROR] [logger] Could not open the '%s' log file; exited with error %d." % [path, err])
+			print("[ERROR] [logger] Could not open the '%s' log file; exited with error %d." % [_path, err])
 			return null
 		else:
 			return result
@@ -443,14 +443,14 @@ func error(message: String, module: String = default_module_name, error_code: in
 ## Add a new module with the given parameter or (by default) the
 ## default ones.
 ## Returns a reference to the instanced module.
-func add_module(name: String, output_level: int = default_output_level, output_strategies: Array[int] = default_output_strategies, logfile: ExternalSink = null) -> Module:
-	if modules.has(name):
-		info("The module '%s' already exists; discarding the call to add it anew." % name, PLUGIN_NAME)
+func add_module(_name: String, output_level: int = default_output_level, output_strategies: Array[int] = default_output_strategies, logfile: ExternalSink = null) -> Module:
+	if modules.has(_name):
+		info("The module '%s' already exists; discarding the call to add it anew." % _name, PLUGIN_NAME)
 	else:
 		if logfile == null:
 			logfile = get_external_sink(default_logfile_path)
-		modules[name] = Module.new(name, output_level, output_strategies, logfile)
-	return modules[name]
+		modules[_name] = Module.new(_name, output_level, output_strategies, logfile)
+	return modules[_name]
 
 
 ## Retrieve the given module if it exists; if not, it will be created.
